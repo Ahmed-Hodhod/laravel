@@ -1,4 +1,4 @@
-name: Automatic Deployment
+name: Deploy Laravel App
 
 on:
   push:
@@ -13,14 +13,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: SSH into Server and Execute Commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SERVER_SSH_PORT }}
-          script: |
-            cd /path/to/your/laravel/app
-            git pull origin main
-            php artisan migrate --force
+      - name: Install PHP and Laravel Dependencies
+        run: |
+          sudo apt update
+          sudo apt install php php-cli php-mbstring php-xml php-mysql
+          sudo apt install composer
+          cd ${{ github.workspace }}
+          composer install
+
+      - name: Run PHP Artisan Migrate
+        run: |
+          cd ${{ github.workspace }}
+          php artisan migrate --force
+
+      - name: Start Laravel Server
+        run: |
+          cd ${{ github.workspace }}
+          php artisan serve --host=0.0.0.0 --port=8000
