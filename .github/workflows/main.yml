@@ -55,7 +55,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
-            cd /home/ubuntu
+            cd /var/www/html
             sudo rm -rf *
             sudo git clone https://github.com/Ahmed-Hodhod/laravel/
 
@@ -69,10 +69,15 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
-            cd /home/ubuntu/laravel
-            composer install --no-dev --optimize-autoloader
+            sudo chown -R ubuntu:ubuntu /var/www/html/laravel
+            cd /var/www/html
+            sudo a2enmod rewrite
+            sudo service apache2 restart
+            composer install 
+            chown -R www-data storage
+            chown -R www-data bootstrap/cache
+            systemctl restart apache2
             php artisan migrate --force
-            sudo cp /home/ubuntu/laravel /var/www/html
 
             #sudo php artisan serve --host=0.0.0.0 --port=8000 &
 
