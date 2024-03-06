@@ -71,15 +71,11 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             sudo usermod -aG ubuntu www-data
-            sudo chown -R ubuntu:ubuntu /var/www/html/laravel
+            sudo chown -R ubuntu:ubuntu /var/www/html/laravel # to run the composer without sudo (not recommended as per the documentation)
             cd /var/www/html/laravel
             sudo a2enmod rewrite
-            sudo service apache2 restart
-            #sudo chown -R ubuntu:ubuntu storage
-            #sudo chown -R ubuntu:ubuntu bootstrap/cache
             sudo chown -R www-data:www-data storage
             sudo chmod -R 775 storage
-
             composer install 
             sudo systemctl restart apache2
             php artisan migrate --force
