@@ -20,9 +20,9 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
-          destination_dir: ~/
           script: |
-            scp -r . ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:~/
+            echo "dummy"
+            #scp -r . ${{secrets.SERVER_USERNAME}}@${{secrets.SERVER_HOST}}:~/
 
       - name: SSH into server and run composer install
         uses: appleboy/ssh-action@master
