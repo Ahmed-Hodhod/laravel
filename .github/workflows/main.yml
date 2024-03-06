@@ -77,6 +77,23 @@ jobs:
             sudo chown -R www-data:www-data storage
             sudo chmod -R 775 storage
             composer install 
+
+            # Define the configuration content
+            CONFIG_CONTENT=$(cat <<EOF
+            <VirtualHost *:80>
+                    ServerAdmin webmaster@localhost
+                    DocumentRoot /var/www/html/laravel
+
+                    ErrorLog \${APACHE_LOG_DIR}/error.log
+                    CustomLog \${APACHE_LOG_DIR}/access.log combined
+            </VirtualHost>
+            EOF
+            )
+
+            # Create a new file and paste the configuration content
+            echo "$CONFIG_CONTENT" | sudo tee /etc/apache2/sites-available/000-default.conf >/dev/null
+
+
             sudo systemctl restart apache2
             php artisan migrate --force
 
