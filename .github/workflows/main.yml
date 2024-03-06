@@ -23,6 +23,7 @@ jobs:
           script: |
             echo "dummy"
             cd ~/ 
+            rm -rf *
             git clone https://github.com/Ahmed-Hodhod/laravel/
             
             #scp -r . ${{secrets.SERVER_USERNAME}}@${{secrets.SERVER_HOST}}:~/
