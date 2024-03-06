@@ -35,7 +35,7 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             echo "Exporting secrets..."
-            echo 'export DB_CONNECTION="${{ secrets.DB_CONNECTION }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export DB_CONNECTION="${{ secrets.DB_CONNECTION  }}"' | sudo tee -a /etc/bash.bashrc
             echo 'export DB_HOST="${{ secrets.DB_HOST }}"' | sudo tee -a /etc/bash.bashrc
             echo 'export DB_PORT="${{ secrets.DB_PORT }}"' | sudo tee -a /etc/bash.bashrc
             echo 'export DB_DATABASE="${{ secrets.DB_DATABASE }}"' | sudo tee -a /etc/bash.bashrc
@@ -55,7 +55,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
-            sudo cd /var/www/html
+            cd /home/ubuntu
             sudo rm -rf *
             sudo git clone https://github.com/Ahmed-Hodhod/laravel/
 
@@ -69,20 +69,10 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
-            sudo cd /var/www/html
-            sudo composer install --no-dev --optimize-autoloader
-            sudo php artisan migrate --force
-
-            # Find the PID of the process using the specified port
-            PID=$(sudo lsof -t -i :8000)
-
-            # If PID is not empty, kill the process
-            if [ -n "$PID" ]; then
-                echo "Killing the process using port 8000..."
-                sudo kill $PID
-            else
-                echo "No process found using port 8000."
-            fi
+            cd /home/ubuntu/laravel
+            composer install --no-dev --optimize-autoloader
+            php artisan migrate --force
+            sudo cp /home/ubuntu/laravel /var/www/html
 
             #sudo php artisan serve --host=0.0.0.0 --port=8000 &
 
