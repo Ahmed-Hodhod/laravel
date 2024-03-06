@@ -26,7 +26,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Copy code to server
+      - name: Export Environment Variables in the server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -44,8 +44,9 @@ jobs:
             export APP_NAME="${{ secrets.APP_NAME }}"
             export APP_ENV="${{ secrets.APP_ENV }}"
             export APP_KEY="${{ secrets.APP_KEY }}"
-            export APP_DEBUG="${{ secrets.APP_DEBUG }}"
-            export APP_URL="${{ secrets.APP_URL }}"
+            sudo export APP_DEBUG="${{ secrets.APP_DEBUG }}"
+            sudo export APP_URL="${{ secrets.APP_URL }}"
+            printenv APP_URL
 
       - name: Copy code to server
         uses: appleboy/ssh-action@master
