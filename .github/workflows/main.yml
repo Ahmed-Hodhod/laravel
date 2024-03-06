@@ -70,7 +70,7 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             sudo chown -R ubuntu:ubuntu /var/www/html/laravel
-            cd /var/www/html
+            cd /var/www/html/laravel
             sudo a2enmod rewrite
             sudo service apache2 restart
             composer install 
