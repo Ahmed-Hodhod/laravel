@@ -70,11 +70,13 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
-            sudo chown -R www-data:www-data /var/www/html/laravel
+            sudo usermod -aG ubuntu www-data
+            sudo chown -R ubuntu:ubuntu /var/www/html/laravel
             cd /var/www/html/laravel
             sudo a2enmod rewrite
-            sudo chown -R www-data storage
-            sudo chown -R www-data bootstrap/cache
+            sudo service apache2 restart
+            sudo chown -R ubuntu:ubuntu storage
+            sudo chown -R ubuntu:ubuntu bootstrap/cache
             composer install 
             sudo systemctl restart apache2
             php artisan migrate --force
