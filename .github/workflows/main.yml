@@ -24,7 +24,7 @@ jobs:
             echo "dummy"
             cd ~/ 
             git clone https://github.com/Ahmed-Hodhod/laravel/
-            cd ~/laravel
+            
             #scp -r . ${{secrets.SERVER_USERNAME}}@${{secrets.SERVER_HOST}}:~/
 
       - name: SSH into server and run composer install
@@ -35,7 +35,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
-            cd ~/
+            cd ~/laravel
             composer install --no-dev --optimize-autoloader
 
       - name: Run Artisan Migrate
