@@ -74,9 +74,9 @@ jobs:
             sudo a2enmod rewrite
             sudo service apache2 restart
             composer install 
-            chown -R www-data storage
-            chown -R www-data bootstrap/cache
-            systemctl restart apache2
+            sudo chown -R www-data storage
+            sudo chown -R www-data bootstrap/cache
+            sudo systemctl restart apache2
             php artisan migrate --force
 
             #sudo php artisan serve --host=0.0.0.0 --port=8000 &
