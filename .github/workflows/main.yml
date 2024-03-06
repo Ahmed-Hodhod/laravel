@@ -35,18 +35,17 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             echo "Exporting secrets..."
-            export DB_CONNECTION="${{ secrets.DB_CONNECTION }}"
-            export DB_HOST="${{ secrets.DB_HOST }}"
-            export DB_PORT="${{ secrets.DB_PORT }}"
-            export DB_DATABASE="${{ secrets.DB_DATABASE }}"
-            export DB_USERNAME="${{ secrets.DB_USERNAME }}"
-            export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
-            export APP_NAME="${{ secrets.APP_NAME }}"
-            export APP_ENV="${{ secrets.APP_ENV }}"
-            export APP_KEY="${{ secrets.APP_KEY }}"
-            sudo export APP_DEBUG="${{ secrets.APP_DEBUG }}"
-            sudo export APP_URL="${{ secrets.APP_URL }}"
-            printenv APP_URL
+            echo 'export DB_CONNECTION="${{ secrets.DB_CONNECTION }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export DB_HOST="${{ secrets.DB_HOST }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export DB_PORT="${{ secrets.DB_PORT }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export DB_DATABASE="${{ secrets.DB_DATABASE }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export DB_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export APP_NAME="${{ secrets.APP_NAME }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export APP_ENV="${{ secrets.APP_ENV }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export APP_KEY="${{ secrets.APP_KEY }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export APP_DEBUG="${{ secrets.APP_DEBUG }}"' | sudo tee -a /etc/bash.bashrc
+            echo 'export APP_URL="${{ secrets.APP_URL }}"' | sudo tee -a /etc/bash.bashrc
 
       - name: Copy code to server
         uses: appleboy/ssh-action@master
