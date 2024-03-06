@@ -26,6 +26,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Export Secrets as Environment Variables
+        run: |
+          echo "Exporting secrets..."
+          export DB_CONNECTION="${{ secrets.DB_CONNECTION }}"
+          export DB_HOST="${{ secrets.DB_HOST }}"
+          export DB_PORT="${{ secrets.DB_PORT }}"
+          export DB_DATABASE="${{ secrets.DB_DATABASE }}"
+          export DB_USERNAME="${{ secrets.DB_USERNAME }}"
+          export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+          export APP_NAME="${{ secrets.APP_NAME }}"
+          export APP_ENV="${{ secrets.APP_ENV }}"
+          export APP_KEY="${{ secrets.APP_KEY }}"
+          export APP_DEBUG="${{ secrets.APP_DEBUG }}"
+          export APP_URL="${{ secrets.APP_URL }}"
+
       - name: Copy code to server
         uses: appleboy/ssh-action@master
         with:
@@ -65,3 +80,5 @@ jobs:
             fi
 
             php artisan serve --host=0.0.0.0 --port=8000 &
+
+# https://codewithsusan.com/notes/deploy-laravel-on-apache
