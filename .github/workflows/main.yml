@@ -49,10 +49,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
-            echo "dummy"
-            cd ~/ 
-            rm -rf *
-            git clone https://github.com/Ahmed-Hodhod/laravel/
+            sudo cd /var/www/html
+            sudo rm -rf *
+            sudo git clone https://github.com/Ahmed-Hodhod/laravel/
 
             #scp -r . ${{secrets.SERVER_USERNAME}}@${{secrets.SERVER_HOST}}:~/
 
@@ -64,9 +63,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
-            cd ~/laravel
-            composer install --no-dev --optimize-autoloader
-            php artisan migrate --force
+            sudo cd /var/www/html
+            sudo composer install --no-dev --optimize-autoloader
+            sudo php artisan migrate --force
 
             # Find the PID of the process using the specified port
             PID=$(sudo lsof -t -i :8000)
@@ -79,6 +78,6 @@ jobs:
                 echo "No process found using port 8000."
             fi
 
-            php artisan serve --host=0.0.0.0 --port=8000 &
+            #sudo php artisan serve --host=0.0.0.0 --port=8000 &
 
 # https://codewithsusan.com/notes/deploy-laravel-on-apache
