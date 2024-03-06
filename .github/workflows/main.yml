@@ -26,27 +26,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Export Environment Variables in the server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SERVER_SSH_PORT }}
-          script: |
-            echo "Exporting secrets..."
-            echo 'export DB_CONNECTION="${{ secrets.DB_CONNECTION  }}"' | sudo tee -a /etc/bash.bashrc
-            echo 'export DB_HOST="${{ secrets.DB_HOST }}"' | sudo tee -a /etc/bash.bashrc
-            echo 'export DB_PORT="${{ secrets.DB_PORT }}"' | sudo tee -a /etc/bash.bashrc
-            echo 'export DB_DATABASE="${{ secrets.DB_DATABASE }}"' | sudo tee -a /etc/bash.bashrc
-            echo 'export DB_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/bash.bashrc
-            echo 'export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/bash.bashrc
-            echo 'export APP_NAME="${{ secrets.APP_NAME }}"' | sudo tee -a /etc/bash.bashrc
-            echo 'export APP_ENV="${{ secrets.APP_ENV }}"' | sudo tee -a /etc/bash.bashrc
-            echo 'export APP_KEY="${{ secrets.APP_KEY }}"' | sudo tee -a /etc/bash.bashrc
-            echo 'export APP_DEBUG="${{ secrets.APP_DEBUG }}"' | sudo tee -a /etc/bash.bashrc
-            echo 'export APP_URL="${{ secrets.APP_URL }}"' | sudo tee -a /etc/bash.bashrc
-
       - name: Copy code to server
         uses: appleboy/ssh-action@master
         with:
@@ -61,6 +40,28 @@ jobs:
 
             #scp -r . ${{secrets.SERVER_USERNAME}}@${{secrets.SERVER_HOST}}:~/
 
+      - name: Export Environment Variables in the server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT }}
+          script: |
+            echo "Exporting secrets to .env file..."
+            cd /var/www/html/laravel
+            echo "DB_CONNECTION=${{ secrets.DB_CONNECTION }}" | sudo tee -a .env
+            echo "DB_HOST=${{ secrets.DB_HOST }}" | sudo tee -a .env
+            echo "DB_PORT=${{ secrets.DB_PORT }}" | sudo tee -a .env
+            echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" | sudo tee -a .env
+            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" | sudo tee -a .env
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" | sudo tee -a .env
+            echo "APP_NAME=${{ secrets.APP_NAME }}" | sudo tee -a .env
+            echo "APP_ENV=${{ secrets.APP_ENV }}" | sudo tee -a .env
+            echo "APP_KEY=${{ secrets.APP_KEY }}" | sudo tee -a .env
+            echo "APP_DEBUG=${{ secrets.APP_DEBUG }}" | sudo tee -a .env
+            echo "APP_URL=${{ secrets.APP_URL }}" | sudo tee -a .env
+
       - name: SSH into server and run composer install
         uses: appleboy/ssh-action@master
         with:
@@ -73,9 +74,9 @@ jobs:
             cd /var/www/html/laravel
             sudo a2enmod rewrite
             sudo service apache2 restart
+            sudo chown -R ubuntu storage
+            sudo chown -R ubuntu bootstrap/cache
             composer install 
-            sudo chown -R www-data storage
-            sudo chown -R www-data bootstrap/cache
             sudo systemctl restart apache2
             php artisan migrate --force
 
